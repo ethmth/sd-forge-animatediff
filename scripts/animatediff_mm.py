@@ -134,8 +134,8 @@ class AnimateDiffMM:
         logger.info(f"Setting DDIM alpha.")
         unet: UnetPatcher = sd_model.forge_objects.unet.clone()
         beta_start = 0.00085
-        beta_end = 0.020 if self.mm.is_adxl else 0.012
-        if self.mm.is_adxl:
+        beta_end = 0.020 if (hasattr(self.mm, 'is_adxl') and self.mm.is_adxl) else 0.012
+        if hasattr(self.mm, 'is_adxl') and self.mm.is_adxl:
             betas = torch.linspace(beta_start**0.5, beta_end**0.5, 1000, dtype=torch.float32, device=get_torch_device()) ** 2
         else:
             betas = torch.linspace(
