@@ -4,8 +4,8 @@ import torch
 from modules import hashes, shared, sd_models
 from backend.patcher.unet import UnetPatcher
 
-from ldm_patched.modules.model_management import get_torch_device, unet_dtype, unet_manual_cast
-from ldm_patched.modules.ops import manual_cast
+from backend.memory_management import get_torch_device, unet_dtype #, unet_manual_cast
+#from ldm_patched.modules.ops import manual_cast
 
 from motion_module import MotionWrapper, MotionModuleType
 from scripts.animatediff_logger import logger_animatediff as logger
@@ -44,8 +44,8 @@ class AnimateDiffMM:
             model_type = MotionModuleType.get_mm_type(mm_state_dict)
             logger.info(f"Guessed {model_name} architecture: {model_type}")
             mm_config = dict(mm_name=model_name, mm_hash=model_hash, mm_type=model_type)
-            if unet_manual_cast(unet_dtype(), get_torch_device()) is not None:
-                mm_config["operations"] = manual_cast
+            #if unet_manual_cast(unet_dtype(), get_torch_device()) is not None:
+            #    mm_config["operations"] = manual_cast
             self.mm = MotionWrapper(**mm_config)
             self.mm.load_state_dict(mm_state_dict)
         self.set_layer_mapping(shared.sd_model)
