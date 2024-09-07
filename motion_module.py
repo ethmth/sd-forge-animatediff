@@ -21,6 +21,9 @@ class MotionModuleType(Enum):
 
     @staticmethod
     def get_mm_type(state_dict: dict[str, torch.Tensor]):
+        if not state_dict:
+            return MotionModuleType.HotShotXL
+
         keys = list(state_dict.keys())
         if any(["mid_block" in k for k in keys]):
             return MotionModuleType.AnimateDiffV2
