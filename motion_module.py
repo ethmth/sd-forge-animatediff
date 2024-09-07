@@ -6,8 +6,8 @@ import torch
 from torch import nn
 from einops import rearrange
 
-from ldm_patched.ldm.modules.attention import FeedForward
-from ldm_patched.modules.ops import disable_weight_init
+from backend.nn.unet import FeedForward
+from backend.operations import ForgeOperations
 
 
 class MotionModuleType(Enum):
@@ -44,7 +44,7 @@ def zero_module(module):
 
 
 class MotionWrapper(nn.Module):
-    def __init__(self, mm_name: str, mm_hash: str, mm_type: MotionModuleType, operations = disable_weight_init):
+    def __init__(self, mm_name: str, mm_hash: str, mm_type: MotionModuleType, operations = ForgeOperations):
         super().__init__()
         self.mm_name = mm_name
         self.mm_type = mm_type
@@ -78,7 +78,7 @@ class MotionWrapper(nn.Module):
 
 
 class MotionModule(nn.Module):
-    def __init__(self, in_channels, num_mm, max_len, attention_block_types=("Temporal_Self", "Temporal_Self"), operations = disable_weight_init):
+    def __init__(self, in_channels, num_mm, max_len, attention_block_types=("Temporal_Self", "Temporal_Self"), operations = ForgeOperations):
         super().__init__()
         self.motion_modules = nn.ModuleList([
             VanillaTemporalModule(
@@ -105,7 +105,7 @@ class VanillaTemporalModule(nn.Module):
         temporal_position_encoding_max_len = 24,
         temporal_attention_dim_div         = 1,
         zero_initialize                    = True,
-        operations                         = disable_weight_init,
+        operations                         = ForgeOperations,
     ):
         super().__init__()
         
@@ -144,7 +144,7 @@ class TemporalTransformer3DModel(nn.Module):
         
         temporal_position_encoding_max_len = 24,
 
-        operations                         = disable_weight_init,
+        operations                         = ForgeOperations,
     ):
         super().__init__()
 
@@ -204,7 +204,7 @@ class TemporalTransformerBlock(nn.Module):
         attention_bias                     = False,
         upcast_attention                   = False,
         temporal_position_encoding_max_len = 24,
-        operations                         = disable_weight_init,
+        operations                         = ForgeOperations,
     ):
         super().__init__()
 
@@ -290,7 +290,7 @@ class CrossAttention(nn.Module):
         bias=False,
         upcast_attention: bool = False,
         upcast_softmax: bool = False,
-        operations = disable_weight_init,
+        operations = ForgeOperations,
     ):
         super().__init__()
         inner_dim = dim_head * heads
