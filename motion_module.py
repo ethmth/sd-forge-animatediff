@@ -232,7 +232,7 @@ class TemporalTransformerBlock(nn.Module):
         self.attention_blocks = nn.ModuleList(attention_blocks)
         self.norms = nn.ModuleList(norms)
 
-        self.ff = FeedForward(dim, dropout=dropout, glu=(activation_fn=='geglu'), operations=operations)
+        self.ff = FeedForward(dim, dropout=dropout, glu=(activation_fn=='geglu'))
         self.ff_norm = operations.LayerNorm(dim)
 
 
