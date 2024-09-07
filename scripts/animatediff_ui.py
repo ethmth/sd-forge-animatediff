@@ -236,11 +236,11 @@ class AnimateDiffUiGroup:
         if not os.path.isdir(model_dir):
             os.mkdir(model_dir)
         def get_sd_rm_tag():
-            if shared.sd_model.is_sdxl:
+            if hasattr(shared.sd_model, 'is_sdxl') and shared.sd_model.is_sdxl:
                 return ["sd1"]
-            elif shared.sd_model.is_sd2:
+            elif hasattr(shared.sd_model, 'is_sd2') and shared.sd_model.is_sd2:
                 return ["sd1, xl"]
-            elif shared.sd_model.is_sd1:
+            elif hasattr(shared.sd_model, 'is_sd1') and shared.sd_model.is_sd1:
                 return ["xl"]
             else:
                 return []
